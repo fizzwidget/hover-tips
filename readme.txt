@@ -27,6 +27,9 @@ ACKNOWLEDGMENTS:
 ------------------------------------------------------
 VERSION HISTORY
 
+v. 6.0 - 2014/10/14
+- Updated TOC to indicate compatibility with WoW Patch 6.0.
+
 v. 5.2 - 2013/03/05
 - Updated TOC to indicate compatibility with WoW Patch 5.2.
 

@@ -92,6 +92,7 @@ local ChatIcons = {
 	[BNET_CLIENT_WTCG] = "|TInterface\\ChatFrame\\UI-ChatIcon-WTCG:16|t",
 	[BNET_CLIENT_APP] = "|TInterface\\ChatFrame\\UI-ChatIcon-Battlenet:16|t",
 	[BNET_CLIENT_HEROES] = "|TInterface\\ChatFrame\\UI-ChatIcon-HotS:16|t",
+	[BNET_CLIENT_OVERWATCH] = "|TInterface\\ChatFrame\\UI-ChatIcon-Overwatch:16|t",
 	[BNET_CLIENT_CLNT] = "|TInterface\\ChatFrame\\UI-ChatIcon-Battlenet:16|t",
 	broadcast = "|TInterface\\FriendsFrame\\BroadcastIcon:16|t",
 	note = "|TInterface\\FriendsFrame\\UI-FriendsFrame-Note:12:14|t",

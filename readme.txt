@@ -27,6 +27,10 @@ ACKNOWLEDGMENTS:
 ------------------------------------------------------
 VERSION HISTORY
 
+v. 7.0 - 2016/08/18
+- Updated TOC to indicate compatibility with WoW Patch 7.0.
+- Handles icons for Battle.net friends in newer games.
+
 v. 6.0 - 2014/10/14
 - Updated TOC to indicate compatibility with WoW Patch 6.0.
 

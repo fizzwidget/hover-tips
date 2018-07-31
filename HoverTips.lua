@@ -3,7 +3,19 @@ local orig1, orig2 = {}, {}
 local GameTooltip = GameTooltip
 
 -- TODO: battlepet & battlePetAbil? requires our own tooltips inheriting BattlePetTooltipTemplate & SharedPetBattleAbilityTooltipTemplate
-local linkTypes = {item = true, enchant = true, spell = true, quest = true, unit = true, talent = true, achievement = true, glyph = true, instancelock = true, currency = true, BNplayer = true }
+local linkTypes = {
+	item = true,
+	enchant = true,
+	spell = true,
+	quest = true,
+	unit = true,
+	talent = true,
+	achievement = true,
+	glyph = true,
+	instancelock = true,
+	currency = true,
+	BNplayer = true,
+ }
 
 local function ShowPlayerTooltip(frame, linkContent)
 	

@@ -16,6 +16,7 @@ local linkTypes = {
 	currency = true,
 	BNplayer = true,
 	keystone = true,
+	battlepet = true,
  }
 
 local function ShowPlayerTooltip(frame, linkContent)
@@ -250,6 +251,15 @@ local function ShowJournalTooltip(frame, linkContent)
 		
 end
 
+local function ShowBattlePetTooltip(frame, linkContent)
+	GameTooltip:SetOwner(frame, "ANCHOR_TOPRIGHT")
+	local petInfo = {}
+	for _, string in pairs({strsplit(":", linkContent)}) do
+		tinsert(petInfo, tonumber(string))
+	end
+	BattlePetToolTip_Show(unpack(petInfo))
+end
+
 local function OnHyperlinkEnter(frame, link, ...)
 	local linkType, linkContent = link:match("^([^:]+):(.+)")
 	if (linkType) then
@@ -271,6 +281,8 @@ local function OnHyperlinkEnter(frame, link, ...)
 			ShowBattleNetTooltip(frame, linkContent);
 		elseif (linkType == "journal") then
 			ShowJournalTooltip(frame, linkContent);
+		elseif (linkType == "battlepet") then
+			ShowBattlePetTooltip(frame, linkContent)
 		elseif linkTypes[linkType] then
 			GameTooltip:SetOwner(frame, "ANCHOR_TOPLEFT")
 			GameTooltip:SetHyperlink(link)
@@ -283,6 +295,7 @@ end
 
 local function OnHyperlinkLeave(frame, ...)
 	GameTooltip:Hide()
+	BattlePetTooltip:Hide()
 	if orig2[frame] then return orig2[frame](frame, ...) end
 end
 

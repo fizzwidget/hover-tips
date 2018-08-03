@@ -148,7 +148,7 @@ local function ShowBattleNetTooltip(frame, linkContent)
 	
 	-- current toon
 	if ( toonID ) then
-		local hasFocus, _, client, realmName, realmID, faction, race, class, guild, zoneName, level, gameText = BNGetToonInfo(presenceID);
+		local hasFocus, _, client, realmName, realmID, faction, race, class, guild, zoneName, level, gameText, broadcast, broadcastTime, online, bnetIDGameAccount, bnetIDAccount = BNGetGameAccountInfo(presenceID);
 		level = level or "";
 		race = race or "";
 		class = class or "";
@@ -168,7 +168,9 @@ local function ShowBattleNetTooltip(frame, linkContent)
 			else
 				GameTooltip:AddLine(characterName, c.r,c.g,c.b);
 			end
-			GameTooltip:AddLine("    "..gameText, c.r,c.g,c.b);
+			if (gameText) then
+				GameTooltip:AddLine("    "..gameText, c.r,c.g,c.b);
+			end
 		end
 	end
 	

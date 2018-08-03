@@ -15,6 +15,7 @@ local linkTypes = {
 	instancelock = true,
 	currency = true,
 	BNplayer = true,
+	keystone = true,
  }
 
 local function ShowPlayerTooltip(frame, linkContent)

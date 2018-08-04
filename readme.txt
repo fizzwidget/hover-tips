@@ -27,6 +27,12 @@ ACKNOWLEDGMENTS:
 ------------------------------------------------------
 VERSION HISTORY
 
+v. 8.0 - 2018/08/04
+- Updated TOC to indicate compatibility with WoW Patch 8.0 and Battle for Azeroth.
+- Fixed errors with Battle.net links.
+- Added support for battle *pet* links. (Thanks ceylina!)
+- Added support for Mythic+ dungeon keystone links. (Thanks again ceylina!)
+
 v. 7.0 - 2016/08/18
 - Updated TOC to indicate compatibility with WoW Patch 7.0.
 - Handles icons for Battle.net friends in newer games.

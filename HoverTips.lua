@@ -1,206 +1,23 @@
 
-local orig1, orig2 = {}, {}
-local GameTooltip = GameTooltip
-
--- TODO: battlepet & battlePetAbil? requires our own tooltips inheriting BattlePetTooltipTemplate & SharedPetBattleAbilityTooltipTemplate
 local linkTypes = {
 	item = true,
-	enchant = true,
+	enchant = true, -- any crafting recipe
 	spell = true,
 	quest = true,
-	unit = true,
+	unit = true, -- used in combat log
 	talent = true,
 	achievement = true,
-	glyph = true,
-	instancelock = true,
+	glyph = true, -- no longer usable since glyph system is gone?
+	instancelock = true, -- raidinfo window
 	currency = true,
-	BNplayer = true,
-	keystone = true,
+	-- BNplayer = true, -- disabled, needs custom handling that's broken now
+	keystone = true, -- untested as of 11.0
 	battlepet = true,
+	-- perksactivity = true, -- TODO needs custom tooltip handling
+	-- curio = true, -- TODO war within delve buddy stuff
+	-- trade = true, -- TODO link your whole profession
+	
  }
-
-local function ShowPlayerTooltip(frame, linkContent)
-	
-	local playerName = strsplit(":", linkContent);
-	-- TODO: reload guild roster at appropriate times so this info exists?
-	local foundInGuild = false;
-	for i = 1, GetNumGuildMembers(1) do
-		local name, rank, rankIndex, level, class, zone, note, officernote, online, status, classFileName, achievementPoints, achievementRank, isMobile = GetGuildRosterInfo(i);
-		if (name == playerName) then
-
-			local guildName = GetGuildInfo("player");
-			local guildColor = ChatTypeInfo["GUILD"];
-			local officerColor = ChatTypeInfo["OFFICER"];
-			local C = HIGHLIGHT_FONT_COLOR; 
-			local G = GRAY_FONT_COLOR;
-
-			GameTooltip:SetOwner(frame, "ANCHOR_TOPLEFT");
-			if (isMobile) then
-				GameTooltip:SetText(ChatFrame_GetMobileEmbeddedTexture(73/255, 177/255, 73/255).." "..name, C.r, G.g, G.b);
-			elseif (not online) then
-				GameTooltip:AddDoubleLine(name, PLAYER_OFFLINE, C.r, C.g, C.b, G.r, G.g, G.b);
-			else
-				GameTooltip:SetText(name, C.r, C.g, C.b);
-			end
-			GameTooltip:AddLine(format(GUILD_TEMPLATE, rank, guildName), C.r, C.g, C.b);
-			GameTooltip:AddLine(format(FRIENDS_LEVEL_TEMPLATE, level, class), C.r, C.g, C.b);
-			GameTooltip:AddLine(zone, C.r, C.g, C.b);
-			if (note and note ~= "") then
-				GameTooltip:AddLine(note, guildColor.r, guildColor.g, guildColor.b);
-			end
-			if (officernote and officernote ~= "") then
-				GameTooltip:AddLine(officernote, officerColor.r, officerColor.g, officerColor.b);
-			end
-			GameTooltip:Show();
-
-			foundInGuild = true;
-			break;
-		end
-	end
-	
-	for i = 1, GetNumFriends() do
-		local name, level, class, area, connected, status, note = GetFriendInfo(i);
-		if (name == playerName) then
-
-			if (not foundInGuild) then
-				local C = HIGHLIGHT_FONT_COLOR; 
-				local G = GRAY_FONT_COLOR;
-				GameTooltip:SetOwner(frame, "ANCHOR_TOPLEFT");
-				if (not connected) then
-					GameTooltip:AddDoubleLine(name, PLAYER_OFFLINE, C.r, C.g, C.b, G.r, G.g, G.b);
-				elseif (status and status ~= "") then
-					GameTooltip:AddDoubleLine(name, status, C.r, C.g, C.b, G.r, G.g, G.b);
-				else
-					GameTooltip:SetText(name, C.r, C.g, C.b);
-				end
-				if (connected) then
-					GameTooltip:AddLine(format(FRIENDS_LEVEL_TEMPLATE, level, class), C.r, C.g, C.b);
-					GameTooltip:AddLine(area, C.r, C.g, C.b);
-				end
-			end
-			if (note and note ~= "") then
-				GameTooltip:AddLine(note);
-			end
-			GameTooltip:Show();
-
-			break;
-		end
-	end
-		
-	-- TODO: if not friend, check party/raid/bg?
-end
-
--- for debug
-function HoverTips_PrintFriends()
-	for i = 1, BNGetNumFriends() do
-		local presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, lastOnline, isAFK, isDND, broadcastText, noteText, isFriend, broadcastTime = BNGetFriendInfo(i);
-		print(format("|HBNplayer:%s:%s:%s:%s:%s|h[%s] (%s)|h", presenceName, presenceID, 0, 0, 0, presenceName, toonName or UNKNOWN));
-	end
-end
-
-local BROADCAST_FONT_COLOR = {r=0.345, g=0.667, b=0.867};
-local ChatIcons = {
-	[BNET_CLIENT_WOW] = "|TInterface\\ChatFrame\\UI-ChatIcon-WOW:16|t",
-	[BNET_CLIENT_SC2] = "|TInterface\\ChatFrame\\UI-ChatIcon-SC2:16|t",
-	[BNET_CLIENT_D3] = "|TInterface\\ChatFrame\\UI-ChatIcon-D3:16|t",
-	[BNET_CLIENT_WTCG] = "|TInterface\\ChatFrame\\UI-ChatIcon-WTCG:16|t",
-	[BNET_CLIENT_APP] = "|TInterface\\ChatFrame\\UI-ChatIcon-Battlenet:16|t",
-	[BNET_CLIENT_HEROES] = "|TInterface\\ChatFrame\\UI-ChatIcon-HotS:16|t",
-	[BNET_CLIENT_OVERWATCH] = "|TInterface\\ChatFrame\\UI-ChatIcon-Overwatch:16|t",
-	[BNET_CLIENT_CLNT] = "|TInterface\\ChatFrame\\UI-ChatIcon-Battlenet:16|t",
-	broadcast = "|TInterface\\FriendsFrame\\BroadcastIcon:16|t",
-	note = "|TInterface\\FriendsFrame\\UI-FriendsFrame-Note:12:14|t",
-	offline = "|TInterface\\FriendsFrame\\StatusIcon-Offline:16|t",
-	online = "|TInterface\\FriendsFrame\\StatusIcon-Online:16|t",
-	afk = "|TInterface\\FriendsFrame\\StatusIcon-Away:16|t",
-	dnd = "|TInterface\\FriendsFrame\\StatusIcon-DnD:16|t",
-};
-local function ShowBattleNetTooltip(frame, linkContent)
-	GameTooltip:SetOwner(frame, "ANCHOR_TOPLEFT");
-
-	local name, presenceID, lineid, chatType, chatTarget = strsplit(":", linkContent);	
-	local presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, lastOnline, isAFK, isDND, broadcastText, noteText, isFriend, broadcastTime = BNGetFriendInfoByID(presenceID);
-	
-	local text;
-	
-	-- friend name (realID name or battletag)
-	local nameText = UNKNOWN;
-	local characterName = toonName;
-	if ( presenceName ) then
-		nameText = presenceName;
-		-- if no character name but we have a BattleTag, use that
-		if ( isOnline and not characterName and battleTag ) then
-			characterName = battleTag;
-		end
-	end
-	local color = FRIENDS_GRAY_COLOR;
-	if (isOnline) then
-		color = FRIENDS_BNET_NAME_COLOR;
-	end
-	local statusIcon = ChatIcons.offline;
-	if (isAFK) then
-		statusIcon = ChatIcons.afk;
-	elseif (isDND) then
-		statusIcon = ChatIcons.dnd;
-	elseif (isOnline) then
-		statusIcon = ChatIcons.online;
-	end
-	GameTooltip:AddDoubleLine(nameText, statusIcon, color.r, color.g, color.b);
-	
-	-- current toon
-	if ( toonID ) then
-		local hasFocus, _, client, realmName, realmID, faction, race, class, guild, zoneName, level, gameText, broadcast, broadcastTime, online, bnetIDGameAccount, bnetIDAccount = BNGetGameAccountInfo(presenceID);
-		level = level or "";
-		race = race or "";
-		class = class or "";
-		local c = FRIENDS_GRAY_COLOR;
-		if ( client == BNET_CLIENT_WOW ) then
-			if ( CanCooperateWithToon(toonID, HasTravelPass()) ) then
-				text = string.format(FRIENDS_TOOLTIP_WOW_TOON_TEMPLATE, characterName, level, race, class);
-			else
-				text = string.format(FRIENDS_TOOLTIP_WOW_TOON_TEMPLATE, characterName..CANNOT_COOPERATE_LABEL, level, race, class);
-			end
-			GameTooltip:AddLine(ChatIcons[client] .. text, c.r,c.g,c.b);
-			local FRIENDS_TOOLTIP_WOW_INFO_TEMPLATE = "    " .. NORMAL_FONT_COLOR_CODE .. FRIENDS_LIST_ZONE .. "|r%1$s|n    " .. NORMAL_FONT_COLOR_CODE .. FRIENDS_LIST_REALM .. "|r%2$s";
-			GameTooltip:AddLine(string.format(FRIENDS_TOOLTIP_WOW_INFO_TEMPLATE, zoneName, realmName), c.r,c.g,c.b);
-		else
-			if (ChatIcons[client]) then
-				GameTooltip:AddLine(ChatIcons[client] .. characterName, c.r,c.g,c.b);
-			else
-				GameTooltip:AddLine(characterName, c.r,c.g,c.b);
-			end
-			if (gameText) then
-				GameTooltip:AddLine("    "..gameText, c.r,c.g,c.b);
-			end
-		end
-	end
-	
-	-- note
-	if ( noteText and noteText ~= "" ) then
-		local c = NORMAL_FONT_COLOR;
-		GameTooltip:AddLine(ChatIcons.note .. noteText, c.r,c.g,c.b);
-	end
-	
-	-- broadcast
-	if ( broadcastText and broadcastText ~= "" ) then
-		broadcastText = broadcastText .. "|n    " .. FRIENDS_BROADCAST_TIME_COLOR_CODE .. string.format(BNET_BROADCAST_SENT_TIME, FriendsFrame_GetLastOnline(broadcastTime));
-		local c = BROADCAST_FONT_COLOR;
-		GameTooltip:AddLine(ChatIcons.broadcast .. broadcastText, c.r,c.g,c.b);
-	end
-
-	-- last online (if offline)
-	if (not isOnline ) then
-		if ( lastOnline == 0 ) then
-			text = FRIENDS_LIST_OFFLINE;
-		else
-			text = string.format(BNET_LAST_ONLINE_TIME, FriendsFrame_GetLastOnline(lastOnline)); -- TODO error here
-		end
-		local c = FRIENDS_GRAY_COLOR;
-		GameTooltip:AddLine(text, c.r,c.g,c.b);
-	end
-	
-	GameTooltip:Show();
-end
 
 local function ShowJournalTooltip(frame, linkContent)
 	local jtype, id, difficulty = strsplit(":", linkContent);
@@ -208,7 +25,6 @@ local function ShowJournalTooltip(frame, linkContent)
 	id = tonumber(id);
 	difficulty = tonumber(difficulty);
 	local instanceID, encounterID, sectionID, tierIndex = EJ_HandleLinkPath(jtype, id);	
-	
 	if (instanceID == nil and encounterID == nil and sectionID == nil) then
 		-- we can get this for dungeon tier links which appear when you level up
 		-- but there's nothing sensible to put in a tooltip for them
@@ -275,10 +91,6 @@ local function OnHyperlinkEnter(frame, link, ...)
 				GameTooltip:SetOwner(frame, "ANCHOR_TOPLEFT")
 				FDA_ShowSolveTooltipForRace(raceIndex);
 			end
-		elseif (linkType == "player") then
-			ShowPlayerTooltip(frame, linkContent);
-		elseif (linkType == "BNplayer") then
-			ShowBattleNetTooltip(frame, linkContent);
 		elseif (linkType == "journal") then
 			ShowJournalTooltip(frame, linkContent);
 		elseif (linkType == "battlepet") then
@@ -290,21 +102,16 @@ local function OnHyperlinkEnter(frame, link, ...)
 		end
 	end
 
-	if orig1[frame] then return orig1[frame](frame, link, ...) end
 end
 
 local function OnHyperlinkLeave(frame, ...)
 	GameTooltip:Hide()
 	BattlePetTooltip:Hide()
-	if orig2[frame] then return orig2[frame](frame, ...) end
 end
 
 local _G = getfenv(0)
 for i=1, NUM_CHAT_WINDOWS do
 	local frame = _G["ChatFrame"..i]
-	orig1[frame] = frame:GetScript("OnHyperlinkEnter")
-	frame:SetScript("OnHyperlinkEnter", OnHyperlinkEnter)
-
-	orig2[frame] = frame:GetScript("OnHyperlinkLeave")
-	frame:SetScript("OnHyperlinkLeave", OnHyperlinkLeave)
+	frame:HookScript("OnHyperlinkEnter", OnHyperlinkEnter)
+	frame:HookScript("OnHyperlinkLeave", OnHyperlinkLeave)
 end

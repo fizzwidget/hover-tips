@@ -12,11 +12,15 @@ local linkTypes = {
 	currency = true,
 	-- BNplayer = true, -- disabled, needs custom handling that's broken now
 	keystone = true, -- untested as of 11.0
-	battlepet = true,
+	battlepet = true, -- semi custom handling from BattlePet UI
 	-- perksactivity = true, -- TODO needs custom tooltip handling
 	-- curio = true, -- TODO war within delve buddy stuff
 	-- trade = true, -- TODO link your whole profession
-	
+	-- api = true, -- TODO has to do with /api command for API help
+	-- battlePetAbil = true, -- TODO probably needs similar to battlepet
+	-- dungeonScore = true, -- TODO mythic+ score has a tooltip
+	-- outfit = true, -- TODO transmog outfit
+	-- talentbuild = true, -- TODO whole talent builds has a useful tooltip?
  }
 
 local function ShowJournalTooltip(frame, linkContent)

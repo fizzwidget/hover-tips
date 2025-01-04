@@ -27,6 +27,11 @@ ACKNOWLEDGMENTS:
 ------------------------------------------------------
 VERSION HISTORY
 
+v. 11.0 - 2025/01/xx
+- Updated TOC to indicate compatibility with WoW Patch 11.0.7 (The War Within).
+- Fixed ChatFrame hooking so hovering for tooltips actually works again.
+- Disabled support for player and Battle.net player link tooltips.
+
 v. 8.0 - 2018/08/04
 - Updated TOC to indicate compatibility with WoW Patch 8.0 and Battle for Azeroth.
 - Fixed errors with Battle.net links.

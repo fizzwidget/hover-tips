@@ -7,31 +7,6 @@ _G[addonName] = T
 T.Title = C_AddOns.GetAddOnMetadata(addonName, "Title")
 T.Version = C_AddOns.GetAddOnMetadata(addonName, "Version")
 
-
-local linkTypes = {
-    item = true,
-    enchant = true, -- any crafting recipe
-    spell = true,
-    quest = true,
-    unit = true, -- used in combat log
-    talent = true,
-    achievement = true,
-    glyph = true, -- no longer usable since glyph system is gone?
-    instancelock = true, -- raidinfo window
-    currency = true,
-    -- BNplayer = true, -- disabled, needs custom handling that's broken now
-    keystone = true, -- untested as of 11.0
-    battlepet = true, -- semi custom handling from BattlePet UI
-    -- perksactivity = true, -- TODO needs custom tooltip handling
-    -- curio = true, -- TODO war within delve buddy stuff
-    -- trade = true, -- TODO link your whole profession
-    -- api = true, -- TODO has to do with /api command for API help
-    -- battlePetAbil = true, -- TODO probably needs similar to battlepet
-    -- dungeonScore = true, -- TODO mythic+ score has a tooltip
-    -- outfit = true, -- TODO transmog outfit
-    -- talentbuild = true, -- TODO whole talent builds has a useful tooltip?
- }
-
 ------------------------------------------------------
  -- Link handler functions
  ------------------------------------------------------
@@ -128,15 +103,19 @@ end
     glyph = T.ShowDefaultTooltip, -- no longer usable since glyph system is gone?
     instancelock = T.ShowDefaultTooltip, -- raidinfo window
     currency = T.ShowDefaultTooltip,
-    keystone = T.ShowDefaultTooltip, -- untested as of 11.0
+    keystone = T.ShowDefaultTooltip,
+    curio = T.ShowDefaultTooltip, -- war within delve buddy stuff
+    azessence = T.ShowDefaultTooltip, -- battle for azeroth stuff
+    conduit = T.ShowDefaultTooltip, -- shadowlands stuff
+    mawpower = T.ShowDefaultTooltip, -- more shadowlands stuff
     
+    -- custom handlers
     journal = T.ShowJournalTooltip,
     battlepet = T.ShowBattlePetTooltip, -- semi custom handling from BattlePet UI
     
     -- BNplayer = true, -- disabled, needs custom handling that's broken now
     -- player = true, -- disabled, needs custom handling that's broken now
     -- perksactivity = true, -- TODO needs custom tooltip handling
-    -- curio = true, -- TODO war within delve buddy stuff
     -- trade = true, -- TODO link your whole profession
     -- api = true, -- TODO has to do with /api command for API help
     -- battlePetAbil = true, -- TODO probably needs similar to battlepet

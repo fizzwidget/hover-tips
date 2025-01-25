@@ -71,6 +71,22 @@ function T:ShowBattlePetTooltip(link)
     BattlePetToolTip_Show(unpack(petInfo))
 end
 
+function T:ShowMapPinTooltip(link)
+    local anchorFrame = self
+    GameTooltip:SetOwner(anchorFrame, "ANCHOR_TOPLEFT")
+    
+    local _, mapID, x, y = strsplit(":", link)
+    local info = C_Map.GetMapInfo(tonumber(mapID))
+    local coordText = ("%.2f, %.2f"):format(tonumber(x) / 100, tonumber(y) / 100)
+
+    local C = NORMAL_FONT_COLOR
+    local G = GRAY_FONT_COLOR
+    GameTooltip:SetText(info.name, C.r, C.g, C.b)
+    GameTooltip:AddLine(coordText, G.r, G.g, G.b)
+
+    GameTooltip:Show()
+end
+
 -- TODO not hooked up yet, fix when modernizing DiggerAid
 function T:ShowDiggerAidTooltip(link)
     local linkType, linkContent = link:match("^([^:]+):(.+)")
@@ -111,7 +127,8 @@ end
     
     -- custom handlers
     journal = T.ShowJournalTooltip,
-    battlepet = T.ShowBattlePetTooltip, -- semi custom handling from BattlePet UI
+    battlepet = T.ShowBattlePetTooltip,
+    worldmap = T.ShowMapPinTooltip,
     
     -- BNplayer = true, -- disabled, needs custom handling that's broken now
     -- player = true, -- disabled, needs custom handling that's broken now

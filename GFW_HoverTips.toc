@@ -1,1 +1,8 @@
-## Interface: 110007## Version: 11.0## Title: Fizzwidget HoverTips## Author: Gazmik Fizzwidget## Notes: Shows tooltips when mousing over links## X-Category: Interface EnhancementsHoverTips.lua
+## Interface: 110100
+## Version: 11.1
+## Title: Fizzwidget HoverTips
+## Author: Gazmik Fizzwidget
+## Notes: Shows tooltips when mousing over links
+## Category: User Interface
+
+HoverTips.lua

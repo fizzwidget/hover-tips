@@ -87,6 +87,44 @@ function T:ShowMapPinTooltip(link)
     GameTooltip:Show()
 end
 
+function T:ShowGarrisonFollowerTooltip(link)
+    local anchorFrame = self
+
+    local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = strsplit(":", link)
+    garrisonFollowerID = tonumber(garrisonFollowerID)
+    GarrisonFollowerTooltip_Show(
+        garrisonFollowerID,
+        -- TODO: appropriate for arbitrary follower link?
+        C_Garrison.IsFollowerCollected(garrisonFollowerID),
+        tonumber(quality),
+        tonumber(level),
+        0, -- xp: not relevant for aribtrary follower link?
+        0, -- levelxp: not relevant for aribtrary follower link?
+        tonumber(itemLevel),
+        tonumber(spec1),
+        tonumber(ability1),
+        tonumber(ability2),
+        tonumber(ability3),
+        tonumber(ability4),
+        tonumber(trait1),
+        tonumber(trait2),
+        tonumber(trait3),
+        tonumber(trait4),
+        true -- hide ability descriptions
+    )
+end
+
+function T:ShowGarrisonFollowerAbilityTooltip(link)
+    local anchorFrame = self
+    
+    local _, garrFollowerAbilityID = strsplit(":", link)
+    GarrisonFollowerAbilityTooltip_Show(
+        GarrisonFollowerAbilityTooltip,
+        tonumber(garrFollowerAbilityID),
+        Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower
+    )
+end
+
 function T:HandleAddonTooltip(link)
     local anchorFrame = self
     local _, addon = strsplit(":", link)
@@ -149,6 +187,8 @@ T.LinkHandlers = {
     journal = T.ShowJournalTooltip,
     battlepet = T.ShowBattlePetTooltip,
     worldmap = T.ShowMapPinTooltip,
+    garrfollower = T.ShowGarrisonFollowerTooltip,
+    garrfollowerability = T.ShowGarrisonFollowerAbilityTooltip,
     
     -- special
     addon = T.HandleAddonTooltip,
@@ -181,6 +221,8 @@ end
 function T:OnHyperlinkLeave(...)
     GameTooltip:Hide()
     BattlePetTooltip:Hide()
+    GarrisonFollowerTooltip:Hide()
+    GarrisonFollowerAbilityTooltip:Hide()
 end
 
 local _G = getfenv(0)

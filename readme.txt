@@ -24,13 +24,28 @@ FEATURES:
 ACKNOWLEDGMENTS:
 	- Originally based on a secondary feature of Tekkub's tekKompare addon (http://tekkub.net), which I still recommend. (It shows item comparison tooltips in all cases, not just at the times where the default UI thinks it's useful.)
 	
+For Addon Authors
+-----------------
+If your addon already provides and handles its own `addon:` hyperlinks, you can work with HoverTips to give them mouseover tooltips in chat windows. 
+
+- HoverTips looks for a link handler function in two ways:
+	- Add your function to the `GFW_HoverTips.AddonLinkHandlers` table.
+	- If your addon has a table whose global name matches that of your TOC file, we automatically look for a function named `ShowAddonTooltip`.
+- HoverTips will invoke your link handler when mousing over links of the form `addon:your-addon-name:link-content`.
+- The form of the link handler is `function(frame, link)`:
+	- The `link` parameter has the hyperlink data (a set of colon-separated strings), including the initial `addon` prefix and your addon name. Parse it to decide what to show in your tooltip.
+	- Add content to `GameTooltip`, or create your own tooltip frame, and show it.
+	- Use the `frame` parameter to anchor/position your tooltip relative to the chat window showing a link.
+	- Return your tooltip frame (so that HoverTips can hide it when the link is no longer moused over).
+	
 ------------------------------------------------------
 VERSION HISTORY
 
-v. 11.0 - 2025/01/xx
-- Updated TOC to indicate compatibility with WoW Patch 11.0.7 (The War Within).
+v. 11.1 - 2025/xxxx/yyyy
+- Updated TOC to indicate compatibility with WoW Patch 11.1 (and The War Within).
 - Fixed ChatFrame hooking so hovering for tooltips actually works again.
 - Disabled support for player and Battle.net player link tooltips.
+- Added a system for other addons to provide tooltips. See "For Addon Authors" in this readme for details.
 
 v. 8.0 - 2018/08/04
 - Updated TOC to indicate compatibility with WoW Patch 8.0 and Battle for Azeroth.

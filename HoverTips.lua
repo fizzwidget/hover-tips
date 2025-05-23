@@ -87,7 +87,27 @@ function T:ShowMapPinTooltip(link)
     GameTooltip:Show()
 end
 
--- TODO not hooked up yet, fix when modernizing DiggerAid
+function T:HandleAddonTooltip(link)
+    local anchorFrame = self
+    local _, addon = strsplit(":", link)
+    
+    -- prefer manually registered handler
+    local handler = T.AddonLinkHandlers[addon]
+    if handler and type(hander) == "function" then
+        return handler(anchorFrame, link)
+    end
+    
+    -- look for a GFW-convention no-registry-needed handler
+    local addonTable = _G[addon]
+    if addonTable and type(addonTable) == "table" then
+        local handler = addonTable.ShowAddonTooltip
+        if handler and type(handler) == "function" then
+            return handler(anchorFrame, link)
+        end
+    end
+end
+
+-- TODO not hooked up yet, move to new addon system
 function T:ShowDiggerAidTooltip(link)
     local linkType, linkContent = link:match("^([^:]+):(.+)")
     if (linkType == FDA_LINK_TYPE and FDA_ShowCurrentArtifactTooltipForRace) then
@@ -106,9 +126,9 @@ function T:ShowDiggerAidTooltip(link)
 end
 
 ------------------------------------------------------
- -- Link handler registry
- ------------------------------------------------------
- T.LinkHandlers = {
+-- Link handler registry
+------------------------------------------------------
+T.LinkHandlers = {
     item = T.ShowDefaultTooltip,
     enchant = T.ShowDefaultTooltip, -- any crafting recipe
     spell = T.ShowDefaultTooltip,
@@ -130,6 +150,9 @@ end
     battlepet = T.ShowBattlePetTooltip,
     worldmap = T.ShowMapPinTooltip,
     
+    -- special
+    addon = T.HandleAddonTooltip,
+    
     -- BNplayer = true, -- disabled, needs custom handling that's broken now
     -- player = true, -- disabled, needs custom handling that's broken now
     -- perksactivity = true, -- TODO needs custom tooltip handling
@@ -142,6 +165,8 @@ end
 
 }
 
+T.AddonLinkHandlers = {}
+
 function T:OnHyperlinkEnter(link)
     local anchorFrame = self -- when hooked this will be the moused-over frame
     local linkType = strsplit(":", link) -- first element only
@@ -149,6 +174,7 @@ function T:OnHyperlinkEnter(link)
     handler = T.LinkHandlers[linkType]
     if handler == nil then return; end
     
+    -- TODO: make handlers return the tooltip shown, so that we can hide it OnLeave
     handler(anchorFrame, link)
 end
 

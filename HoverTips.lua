@@ -188,3 +188,45 @@ for i=1, NUM_CHAT_WINDOWS do
     frame:HookScript("OnHyperlinkEnter", T.OnHyperlinkEnter)
     frame:HookScript("OnHyperlinkLeave", T.OnHyperlinkLeave)
 end
+
+------------------------------------------------------
+-- Modify recipe source text to show currency names
+------------------------------------------------------
+
+function T.FilterRecipeSourceText(text)
+    local newstr = string.gsub(text, "|H([^:]*):([^|]*)|h(.-)|h", function(linkType, id, displayText)
+        if linkType == "currency" then
+            local info = C_CurrencyInfo.GetCurrencyInfo(id)
+            return displayText..info.name
+        elseif linkType == "item" then
+            local name = GetItemInfo(id)
+            return displayText..name
+        end
+    end)
+    return newstr
+end
+
+local event = "ProfessionsFrame.Show"
+local RecipeSourceButton_ignoredFirstCall
+function T.HookRecipeSourceButton()
+    -- print(event)
+    local frame = ProfessionsFrame.CraftingPage.SchematicForm.RecipeSourceButton
+    -- bind very late so we know the button is ready to be hooked
+    hooksecurefunc(frame, "Show", function(self)
+        -- even then, this doesn't work when we do it the first time... /confused
+        -- so we wait for it to happen twice
+        if not RecipeSourceButton_ignoredFirstCall then 
+            RecipeSourceButton_ignoredFirstCall = true
+            return
+        end
+        -- print("hooking", self, "OnEnter", self:GetScript("OnEnter"))
+        self:HookScript("OnEnter", function()
+            -- print("OnEnter")
+            local originalText = GameTooltipTextLeft1:GetText()
+            local newText = T.FilterRecipeSourceText(originalText)
+            GameTooltip:SetText(newText, 1, 1, 1)
+        end)
+    end)
+    EventRegistry:UnregisterCallback(event, T.HookRecipeSourceButton, T)
+end
+EventRegistry:RegisterCallback(event, T.HookRecipeSourceButton, T)

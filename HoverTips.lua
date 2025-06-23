@@ -13,7 +13,7 @@ T.Version = C_AddOns.GetAddOnMetadata(addonName, "Version")
 
 function T:ShowDefaultTooltip(link)
     local anchorFrame = self
-    GameTooltip:SetOwner(anchorFrame, "ANCHOR_TOPLEFT")
+    GameTooltip:SetOwner(anchorFrame, "ANCHOR_TOPRIGHT")
     GameTooltip:SetHyperlink(link)
     GameTooltip:Show()
 end
@@ -188,3 +188,12 @@ for i=1, NUM_CHAT_WINDOWS do
     frame:HookScript("OnHyperlinkEnter", T.OnHyperlinkEnter)
     frame:HookScript("OnHyperlinkLeave", T.OnHyperlinkLeave)
 end
+
+
+
+hooksecurefunc("SetItemRef", function(link, text)
+    local r, s = strsplit(":", link)
+    if r == "achievement" and IsAltKeyDown() then
+        AchievementFrame_SelectAchievement(s, false)
+    end
+end)

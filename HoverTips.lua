@@ -193,9 +193,11 @@ end
 
 
 hooksecurefunc("SetItemRef", function(link, text)
-    local r, s = strsplit(":", link)
-    if r == "achievement" and IsAltKeyDown() then
-        AchievementFrame_SelectAchievement(s, false)
+    local linkType, id = strsplit(":", link)
+    if linkType == "achievement" and IsAltKeyDown() then
+        AchievementFrame_LoadUI()
+        ShowUIPanel(AchievementFrame)
+        AchievementFrame_SelectAchievement(tonumber(id), false)
     end
 end)
 

@@ -13,7 +13,7 @@ T.Version = C_AddOns.GetAddOnMetadata(addonName, "Version")
 
 function T:ShowDefaultTooltip(link)
     local anchorFrame = self
-    GameTooltip:SetOwner(anchorFrame, "ANCHOR_TOPRIGHT")
+    GameTooltip:SetOwner(anchorFrame, "ANCHOR_CURSOR")
     GameTooltip:SetHyperlink(link)
     GameTooltip:Show()
 end
@@ -189,7 +189,10 @@ for i=1, NUM_CHAT_WINDOWS do
     frame:HookScript("OnHyperlinkLeave", T.OnHyperlinkLeave)
 end
 
+local frame = CommunitiesFrame.Chat.MessageFrame
 
+frame:HookScript("OnHyperlinkEnter", T.OnHyperlinkEnter)
+frame:HookScript("OnHyperlinkLeave", T.OnHyperlinkLeave)
 
 
 hooksecurefunc("SetItemRef", function(link, text)

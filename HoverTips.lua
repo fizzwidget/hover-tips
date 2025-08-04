@@ -215,7 +215,7 @@ function T.FilterRecipeSourceText(text)
             return displayText..info.name
         elseif linkType == "item" then
             local name = GetItemInfo(id)
-            return displayText..name
+            return displayText..(name or "")
         end
     end)
     return newstr

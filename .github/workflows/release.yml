@@ -1,0 +1,27 @@
+name: Create release
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Zip Release
+      uses: thedoctor0/zip-release@0.7.6
+      with:
+        type: 'zip'
+        filename: 'GFW_HoverTips.zip'
+        exclusions: '*.git* .*'
+
+    - name: Upload Release
+      uses: ncipollo/release-action@v1.20.0
+      with:
+        artifacts: "GFW_HoverTips.zip"
+        token: ${{ secrets.GITHUB_TOKEN }}

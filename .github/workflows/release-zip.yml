@@ -1,4 +1,4 @@
-name: Make zip for release
+name: Add release zip
 
 on:
   release:

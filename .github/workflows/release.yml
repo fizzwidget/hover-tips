@@ -24,4 +24,5 @@ jobs:
       uses: ncipollo/release-action@v1.20.0
       with:
         artifacts: "GFW_HoverTips.zip"
+        allowUpdates: true
         token: ${{ secrets.GITHUB_TOKEN }}

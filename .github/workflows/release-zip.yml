@@ -25,3 +25,7 @@ jobs:
       with:
         artifacts: "GFW_HoverTips.zip"
         allowUpdates: true
+        omitNameDuringUpdate: true
+        omitDraftDuringUpdate: true
+        omitBodyDuringUpdate: true
+        

@@ -87,6 +87,53 @@ function T:ShowMapPinTooltip(link)
     GameTooltip:Show()
 end
 
+function T:ShowHousingInitiativeTooltip(link)
+    local _, initiativeTaskID = strsplit(":", link)
+    local data = C_NeighborhoodInitiative.GetInitiativeTaskInfo(tonumber(initiativeTaskID))
+    if not data then return end
+    
+    local anchorFrame = self
+    GameTooltip:SetOwner(anchorFrame, "ANCHOR_CURSOR")
+
+    -- From AddOns/Blizzard_HousingDashboard/Blizzard_HousingDashboardHouseInfoContent.lua
+    -- InitiativeTaskButtonMixin:ShowTooltip
+    
+    if data.timesCompleted and data.timesCompleted > 0 and data.taskType == Enum.NeighborhoodInitiativeTaskType.RepeatableInfinite then
+        GameTooltip_SetTitle(GameTooltip, HOUSING_DASHBOARD_REPEATABLE_TASK_TITLE_TOOLTIP_FORMAT:format(data.taskName, data.timesCompleted), NORMAL_FONT_COLOR);
+    else
+        GameTooltip_SetTitle(GameTooltip, data.taskName, NORMAL_FONT_COLOR);
+    end
+    
+    if data.taskType == Enum.NeighborhoodInitiativeTaskType.RepeatableInfinite then
+        GameTooltip_AddNormalLine(GameTooltip, HOUSING_ENDEAVOR_REPEATABLE_TASK)
+    end
+    
+    GameTooltip_AddBlankLineToTooltip(GameTooltip);
+    
+    if #data.description > 0 then
+        GameTooltip_AddHighlightLine(GameTooltip, data.description)
+        GameTooltip_AddBlankLineToTooltip(GameTooltip);
+    end
+    
+    for _, requirement in ipairs(data.requirementsList) do
+        local tooltipLine = requirement.requirementText;
+        tooltipLine = string.gsub(tooltipLine, " / ", "/");
+        local color = not requirement.completed and WHITE_FONT_COLOR or DISABLED_FONT_COLOR;
+        GameTooltip_AddColoredLine(GameTooltip, tooltipLine, color);
+    end
+    
+    GameTooltip_AddBlankLineToTooltip(GameTooltip);
+    local rewardQuestID = data.rewardQuestID;
+    if rewardQuestID then
+        GameTooltip_AddQuestRewardsToTooltip(GameTooltip, data.rewardQuestID, TOOLTIP_QUEST_REWARDS_STYLE_INITIATIVE_TASK);
+    end
+    
+    -- skip the part from InitiativeTaskButtonMixin:ShowTooltip about tracked tasks
+    
+    GameTooltip:Show()
+ 
+end
+
 function T:HandleAddonTooltip(link)
     local anchorFrame = self
     local _, addon = strsplit(":", link)
@@ -149,6 +196,7 @@ T.LinkHandlers = {
     journal = T.ShowJournalTooltip,
     battlepet = T.ShowBattlePetTooltip,
     worldmap = T.ShowMapPinTooltip,
+    initiativetask = T.ShowHousingInitiativeTooltip,
     
     -- special
     addon = T.HandleAddonTooltip,
@@ -167,7 +215,9 @@ T.LinkHandlers = {
 
 T.AddonLinkHandlers = {}
 
-function T:OnHyperlinkEnter(link)
+-- TODO follow EncounterJournal example to anchor tooltips to actual hyperlink text location
+-- refactor so that we GameTooltip:SetAnchor etc in one place
+function T:OnHyperlinkEnter(link, text, fontString, left, bottom, width, height)
     local anchorFrame = self -- when hooked this will be the moused-over frame
     local linkType = strsplit(":", link) -- first element only
     

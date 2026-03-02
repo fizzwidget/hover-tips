@@ -1,4 +1,4 @@
-## Interface: 120000
+## Interface: 120001
 ## Version: 12.0
 ## Title: Fizzwidget HoverTips
 ## Author: Gazmik Fizzwidget

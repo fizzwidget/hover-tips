@@ -35,8 +35,8 @@ If your addon already provides and handles its own `addon:` hyperlinks, you can 
 	
 ## Version History
 
-### v. 12.0 - 2026/xxxx/yyyy
-- Updated TOC to indicate compatibility with WoW Patch 12.0 (Midnight).
+### v. 12.0 - 2026/03/01
+- Updated TOC for compatibility with WoW Patch 12.0 (Midnight).
 - Fixed ChatFrame hooking so hovering for tooltips actually works again.
 - Adds mouseover tooltips to chat in the Guild/Communities window.
 - Adds tooltips for Housing endeavor task links and map pin links.
